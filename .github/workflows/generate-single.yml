@@ -113,6 +113,18 @@ jobs:
             exit 1
           fi
 
+
+      - name: Copy documented file to repo root
+        run: |
+          # Copy from output/latest/documented/ to documented/ (for committing)
+          echo "Copying documented files from output/latest/documented/ to documented/"
+          mkdir -p documented
+          cp -r output/latest/documented/* documented/ 2>/dev/null || echo "No documented files found"
+          
+          # Show what was copied
+          echo "Documented files:"
+          find documented/ -name "*.rb" -newer output/latest/manifest.json 2>/dev/null || echo "No new files"
+
       - name: Show diff
         if: steps.verify.outputs.has_output == 'true'
         run: |
