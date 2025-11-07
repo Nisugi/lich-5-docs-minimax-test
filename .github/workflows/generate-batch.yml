@@ -47,7 +47,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt    - name: Install Ollama (if using minimax-m2)
+        pip install -r requirements.txt
+
+
+    - name: Install Ollama (if using minimax-m2)
       if: inputs.provider == 'minimax-m2'
       run: |
         echo "Installing Ollama..."
@@ -63,9 +66,6 @@ jobs:
         echo "Pulling minimax-m2:latest model..."
         ollama pull minimax-m2:latest
         echo "Model ready"
-
-
-
     - name: Clone Lich repository
       run: |
         git clone https://github.com/${{ inputs.source_repo }}.git lich-source
