@@ -24,7 +24,7 @@ class ProviderFactory:
         Create an LLM provider instance
 
         Args:
-            provider_name: Name of provider ('gemini', 'openai', 'mock', 'anthropic')
+            provider_name: Name of provider ('gemini', 'openai', 'mock', 'anthropic', 'deepseek-coder')
                           If None, uses LLM_PROVIDER env var or defaults to 'openai'
             config: Optional configuration dict to override defaults
 
@@ -79,6 +79,18 @@ class ProviderFactory:
                     "Install with: pip install anthropic"
                 )
 
+
+        elif provider_name == 'deepseek-coder':
+            try:
+                from .deepseek_coder_provider import DeepSeekCoderProvider
+                provider = DeepSeekCoderProvider(provider_config)
+                logger.info("[FREE] Using DeepSeek-Coder local provider (Ollama - zero cost)")
+            except ImportError:
+                raise ImportError(
+                    "Cannot use DeepSeek-Coder provider: requests not installed. "
+                    "Install with: pip install requests"
+                )
+
         elif provider_name == 'mock':
             provider = MockProvider(provider_config)
             logger.info("[MOCK] Using Mock provider (testing mode - no API calls)")
@@ -86,7 +98,7 @@ class ProviderFactory:
         else:
             raise ValueError(
                 f"Unknown provider: {provider_name}. "
-                f"Supported providers: openai, anthropic, gemini, mock"
+                f"Supported providers: openai, anthropic, gemini, deepseek-coder, mock"
             )
 
         # Log provider stats
@@ -182,6 +194,18 @@ class ProviderFactory:
             else:
                 results["valid"] = True
                 results["warnings"].append("Anthropic will incur costs (~$0.25-1.00 per run)")
+
+
+        elif provider_name == 'deepseek-coder':
+            try:
+                from .deepseek_coder_provider import DeepSeekCoderProvider
+                provider = DeepSeekCoderProvider(provider_config)
+                logger.info("[FREE] Using DeepSeek-Coder local provider (Ollama - zero cost)")
+            except ImportError:
+                raise ImportError(
+                    "Cannot use DeepSeek-Coder provider: requests not installed. "
+                    "Install with: pip install requests"
+                )
 
         elif provider_name == 'mock':
             results["valid"] = True
