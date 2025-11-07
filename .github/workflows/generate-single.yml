@@ -39,23 +39,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-    - name: Install Ollama (if using minimax-m2)
-      if: inputs.provider == 'minimax-m2'
-      run: |
-        echo "Installing Ollama..."
-        curl -fsSL https://ollama.com/install.sh | sh
-        echo "Ollama installed successfully"
-
-    - name: Start Ollama and pull MiniMax-M2 model (if using minimax-m2)
-      if: inputs.provider == 'minimax-m2'
-      run: |
-        echo "Starting Ollama service..."
-        ollama serve > /tmp/ollama.log 2>&1 &
-        sleep 5
-        echo "Pulling minimax-m2:latest model..."
-        ollama pull minimax-m2:latest
-        echo "Model ready"
-
 
         id: validate
         run: |
