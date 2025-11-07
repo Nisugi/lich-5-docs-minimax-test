@@ -14,7 +14,7 @@ on:
         options:
           - openai
           - anthropic
-          - minimax-m2
+          - deepseek-coder
         default: 'openai'
 
 jobs:
@@ -41,21 +41,21 @@ jobs:
           pip install -r requirements.txt
 
 
-      - name: Install Ollama (if using minimax-m2)
-        if: inputs.provider == 'minimax-m2'
+      - name: Install Ollama (if using deepseek-coder)
+        if: inputs.provider == 'deepseek-coder'
         run: |
           echo "Installing Ollama..."
           curl -fsSL https://ollama.com/install.sh | sh
           echo "Ollama installed successfully"
 
-      - name: Start Ollama and pull MiniMax-M2 model (if using minimax-m2)
-        if: inputs.provider == 'minimax-m2'
+      - name: Start Ollama and pull DeepSeek-Coder model (if using deepseek-coder)
+        if: inputs.provider == 'deepseek-coder'
         run: |
           echo "Starting Ollama service..."
           ollama serve > /tmp/ollama.log 2>&1 &
           sleep 5
-          echo "Pulling minimax-m2:latest model..."
-          ollama pull minimax-m2:latest
+          echo "Pulling deepseek-coder:6.7b model..."
+          ollama pull deepseek-coder:6.7b
           echo "Model ready"
       - name: Validate file exists
         id: validate

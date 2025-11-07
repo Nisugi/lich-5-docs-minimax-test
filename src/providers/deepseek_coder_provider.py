@@ -1,6 +1,6 @@
 """
-MiniMax-M2 Provider Implementation (Local via Ollama)
-Zero-cost local LLM provider for documentation generation
+DeepSeek-Coder Provider Implementation (Local via Ollama)
+Zero-cost local LLM provider for code documentation generation
 """
 
 import logging
@@ -11,22 +11,22 @@ from .base import LLMProvider, ProviderConfig
 logger = logging.getLogger(__name__)
 
 
-class MinimaxM2Provider(LLMProvider):
+class DeepSeekCoderProvider(LLMProvider):
     """
-    MiniMax-M2 provider running locally via Ollama
+    DeepSeek-Coder provider running locally via Ollama
 
     Provides zero-cost documentation generation using the open-source
-    MiniMax-M2 model (230B total params, 10B active MoE architecture).
-    Optimized for coding and agentic workflows.
+    DeepSeek-Coder model (6.7B parameters).
+    Specifically trained for code understanding and generation.
     """
 
     def __init__(self, config: Optional[ProviderConfig] = None):
-        # Default configuration for MiniMax-M2 local
+        # Default configuration for DeepSeek-Coder local
         if config is None:
             config = ProviderConfig(
-                name="minimax-m2",
-                model="minimax-m2:latest",
-                max_tokens=16384,  # MiniMax-M2 supports long context
+                name="deepseek-coder",
+                model="deepseek-coder:6.7b",
+                max_tokens=16384,
                 temperature=0.0,
                 # No rate limits for local execution
                 requests_per_minute=None,
@@ -48,14 +48,14 @@ class MinimaxM2Provider(LLMProvider):
                 available_models = response.json().get('models', [])
                 model_names = [m.get('name', '') for m in available_models]
 
-                # Check if minimax-m2 is available
-                if not any('minimax-m2' in name for name in model_names):
+                # Check if deepseek-coder is available
+                if not any('deepseek-coder' in name for name in model_names):
                     logger.warning(
-                        "⚠️  MiniMax-M2 model not found in Ollama. "
-                        "Run 'ollama pull minimax-m2:latest' to download the model."
+                        "⚠️  DeepSeek-Coder model not found in Ollama. "
+                        "Run 'ollama pull deepseek-coder:6.7b' to download the model."
                     )
                 else:
-                    logger.info("✅ MiniMax-M2 model available in Ollama")
+                    logger.info("✅ DeepSeek-Coder model available in Ollama")
             else:
                 logger.warning(f"⚠️  Ollama responded with status {response.status_code}")
         except requests.exceptions.RequestException as e:
@@ -67,7 +67,7 @@ class MinimaxM2Provider(LLMProvider):
 
     def generate(self, prompt: str, system_prompt: Optional[str] = None) -> str:
         """
-        Generate documentation using MiniMax-M2 via Ollama
+        Generate documentation using DeepSeek-Coder via Ollama
 
         Args:
             prompt: The user prompt
@@ -78,7 +78,7 @@ class MinimaxM2Provider(LLMProvider):
         """
         # Log first request info
         if self.request_count == 0:
-            logger.info("🆓 Using MiniMax-M2 local (Ollama). No costs will be incurred!")
+            logger.info("🆓 Using DeepSeek-Coder local (Ollama). No costs will be incurred!")
             logger.info(f"Model: {self.config.model} via {self.ollama_host}")
 
         # No rate limiting needed for local execution

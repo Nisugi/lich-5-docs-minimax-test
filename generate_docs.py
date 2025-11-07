@@ -1047,7 +1047,7 @@ def main():
     )
     parser.add_argument(
         '--provider',
-        choices=['gemini', 'openai', 'mock', 'anthropic', 'minimax-m2'],
+        choices=['gemini', 'openai', 'mock', 'anthropic', 'deepseek-coder'],
         help='LLM provider to use (defaults to env var or openai)'
     )
     parser.add_argument(

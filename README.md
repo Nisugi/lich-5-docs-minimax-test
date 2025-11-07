@@ -214,7 +214,7 @@ The system supports three LLM providers:
 
 For current pricing and rate limits, consult the provider's official documentation.
 
-- **MiniMax-M2**: Uses `minimax-m2:latest` model via Ollama (FREE - local execution, see [MiniMax-M2 on Ollama](https://ollama.com/library/minimax-m2))
+- **DeepSeek-Coder**: Uses `deepseek-coder:latest` model via Ollama (FREE - local execution, see [DeepSeek-Coder on Ollama](https://ollama.com/library/deepseek-coder))
   - **Zero cost** - runs locally via Ollama
   - **No rate limits** - hardware dependent
   - **Requires**: [Ollama](https://ollama.com/) installed and running
@@ -222,7 +222,7 @@ For current pricing and rate limits, consult the provider's official documentati
     ```bash
     curl -fsSL https://ollama.com/install.sh | sh
     ollama serve
-    ollama pull minimax-m2:latest
+    ollama pull deepseek-coder:latest
     ```
 
 

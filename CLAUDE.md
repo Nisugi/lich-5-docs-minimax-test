@@ -1,41 +1,41 @@
 # CLAUDE.md
 
 
-## MiniMax-M2 Test Repo
+## DeepSeek-Coder Test Repo
 
-This is a test repository for evaluating the **MiniMax-M2** open-source LLM running locally via **Ollama**.
+This is a test repository for evaluating the **DeepSeek-Coder** open-source LLM running locally via **Ollama**.
 
 ### What Changed from Original Repo
 
 **New Provider Added:**
-- `src/providers/minimax_m2_provider.py` - MiniMax-M2 provider using Ollama HTTP API
+- `src/providers/deepseek_coder_provider.py` - DeepSeek-Coder provider using Ollama HTTP API
 - Uses `requests` library to communicate with local Ollama instance
 - No API keys required
 - Zero ongoing costs
 
 **Modified Files:**
-- `src/providers/factory.py` - Added minimax-m2 to provider registry
-- `generate_docs.py` - Added 'minimax-m2' to CLI choices
+- `src/providers/factory.py` - Added deepseek-coder to provider registry
+- `generate_docs.py` - Added 'deepseek-coder' to CLI choices
 - `requirements.txt` - Added note about Ollama (no new Python packages needed)
 - `.github/workflows/generate-batch.yml` - Added Ollama installation/setup steps
 - `.github/workflows/generate-single.yml` - Added Ollama installation/setup steps
-- `README.md` - Added MiniMax-M2 documentation
+- `README.md` - Added DeepSeek-Coder documentation
 - `CLAUDE.md` - This file
 
-### MiniMax-M2 Provider Details
+### DeepSeek-Coder Provider Details
 
 **Model:**
-- Name: `minimax-m2:latest`
-- Architecture: MoE (230B total params, 10B active)
+- Name: `deepseek-coder:latest`
+- Architecture: MoE (6.7B parameters)
 - Optimized for: Coding and agentic workflows
 - Context window: ~200K tokens
 - License: Apache 2.0
 
 **Workflow Changes:**
-GitHub Actions workflows now include conditional steps when `provider == 'minimax-m2'`:
+GitHub Actions workflows now include conditional steps when `provider == 'deepseek-coder'`:
 1. Install Ollama via curl script
 2. Start Ollama service in background
-3. Pull minimax-m2:latest model (~5-10 GB download)
+3. Pull deepseek-coder:latest model (~5-10 GB download)
 4. Run documentation generation
 
 **Performance Characteristics:**
