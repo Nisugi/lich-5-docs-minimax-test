@@ -141,6 +141,14 @@ class ProviderFactory:
                     "recommended": False,
                     "note": "Only for small projects due to severe rate limits"
                 },
+                "deepseek-coder": {
+                    "description": "DeepSeek-Coder Local (via Ollama)",
+                    "cost": "FREE (local execution)",
+                    "limits": "None (hardware dependent)",
+                    "model": "deepseek-coder:6.7b",
+                    "recommended": True,
+                    "note": "Zero-cost local LLM, optimized for coding. Requires Ollama."
+                },
                 "mock": {
                     "description": "Mock provider for testing",
                     "cost": "FREE",
@@ -197,15 +205,12 @@ class ProviderFactory:
 
 
         elif provider_name == 'deepseek-coder':
-            try:
-                from .deepseek_coder_provider import DeepSeekCoderProvider
-                provider = DeepSeekCoderProvider(provider_config)
-                logger.info("[FREE] Using DeepSeek-Coder local provider (Ollama - zero cost)")
-            except ImportError:
-                raise ImportError(
-                    "Cannot use DeepSeek-Coder provider: requests not installed. "
-                    "Install with: pip install requests"
-                )
+            # No API key needed, but check if Ollama is accessible
+            results["valid"] = True  # Will fail gracefully at runtime if Ollama not running
+            results["warnings"].append(
+                "DeepSeek-Coder requires Ollama to be running locally. "
+                "Install: curl -fsSL https://ollama.com/install.sh | sh"
+            )
 
         elif provider_name == 'mock':
             results["valid"] = True
