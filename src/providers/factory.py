@@ -24,7 +24,7 @@ class ProviderFactory:
         Create an LLM provider instance
 
         Args:
-            provider_name: Name of provider ('gemini', 'openai', 'mock', 'anthropic', 'deepseek-coder')
+            provider_name: Name of provider ('gemini', 'openai', 'mock', 'anthropic')
                           If None, uses LLM_PROVIDER env var or defaults to 'openai'
             config: Optional configuration dict to override defaults
 
@@ -79,29 +79,6 @@ class ProviderFactory:
                     "Install with: pip install anthropic"
                 )
 
-        elif provider_name == 'deepseek-coder':
-            try:
-                from .deepseek_coder_provider import DeepSeekCoderProvider
-                provider = DeepSeekCoderProvider(provider_config)
-                logger.info("[FREE] Using DeepSeek-Coder local provider (Ollama - zero cost)")
-            except ImportError as e:
-                raise ImportError(
-                    "Cannot use DeepSeek-Coder provider: requests not installed. "
-                    "Install with: pip install requests"
-                )
-            except ConnectionError as e:
-                raise ConnectionError(
-                    f"Cannot connect to Ollama: {e}
-"
-                    "Make sure Ollama is running:
-"
-                    "  1. Install: curl -fsSL https://ollama.com/install.sh | sh
-"
-                    "  2. Start: ollama serve
-"
-                    "  3. Pull model: ollama pull deepseek-coder:latest"
-                )
-
         elif provider_name == 'mock':
             provider = MockProvider(provider_config)
             logger.info("[MOCK] Using Mock provider (testing mode - no API calls)")
@@ -109,7 +86,7 @@ class ProviderFactory:
         else:
             raise ValueError(
                 f"Unknown provider: {provider_name}. "
-                f"Supported providers: openai, anthropic, gemini, deepseek-coder, mock"
+                f"Supported providers: openai, anthropic, gemini, mock"
             )
 
         # Log provider stats
@@ -151,14 +128,6 @@ class ProviderFactory:
                     "model": "gemini-2.0-flash-exp",
                     "recommended": False,
                     "note": "Only for small projects due to severe rate limits"
-                },
-                "deepseek-coder": {
-                    "description": "DeepSeek-Coder Local (via Ollama)",
-                    "cost": "FREE (local execution)",
-                    "limits": "None (hardware dependent)",
-                    "model": "deepseek-coder:latest",
-                    "recommended": True,
-                    "note": "Zero-cost local LLM, optimized for coding. Requires Ollama."
                 },
                 "mock": {
                     "description": "Mock provider for testing",
@@ -213,14 +182,6 @@ class ProviderFactory:
             else:
                 results["valid"] = True
                 results["warnings"].append("Anthropic will incur costs (~$0.25-1.00 per run)")
-
-        elif provider_name == 'deepseek-coder':
-            # No API key needed, but check if Ollama is accessible
-            results["valid"] = True  # Will fail gracefully at runtime if Ollama not running
-            results["warnings"].append(
-                "DeepSeek-Coder requires Ollama to be running locally. "
-                "Install: curl -fsSL https://ollama.com/install.sh | sh"
-            )
 
         elif provider_name == 'mock':
             results["valid"] = True
