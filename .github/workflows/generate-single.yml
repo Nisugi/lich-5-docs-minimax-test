@@ -57,10 +57,18 @@ jobs:
           echo "Pulling deepseek-coder:6.7b model..."
           ollama pull deepseek-coder:6.7b
           echo "Model ready"
+
+      - name: Clone Lich-5 repository
+        run: |
+          git clone https://github.com/elanthia-online/lich-5.git lich-source
+          cd lich-source
+          git checkout main
+          echo "Cloned lich-5 repository"
+
       - name: Validate file exists
         id: validate
         run: |
-          if [ ! -f "${{ inputs.file_path }}" ]; then
+          if [ ! -f "lich-source/${{ inputs.file_path }}" ]; then
             echo "Error: File not found: ${{ inputs.file_path }}"
             exit 1
           fi
@@ -79,7 +87,7 @@ jobs:
 
           # Run generate_docs.py with --file parameter and mirror structure
           python generate_docs.py \
-            --file "${{ inputs.file_path }}" \
+            --file "lich-source/${{ inputs.file_path }}" \
             --provider ${{ inputs.provider }} \
             --output-structure mirror
 
@@ -88,7 +96,10 @@ jobs:
         run: |
           # Check if documented file was created
           # The mirrored path will be: documented/<original_path>
-          expected_output="documented/${{ inputs.file_path }}"
+          # Strip lib/ prefix for output path
+          FILE_PATH="${{ inputs.file_path }}"
+          FILE_PATH="${FILE_PATH#lib/}"  # Remove lib/ prefix
+          expected_output="documented/$FILE_PATH"
 
           if [ -f "$expected_output" ]; then
             echo "has_output=true" >> $GITHUB_OUTPUT
